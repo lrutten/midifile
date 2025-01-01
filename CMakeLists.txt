@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.21.4)
 
 project(midifile C CXX)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(CheckIncludeFiles)
@@ -122,6 +122,8 @@ add_executable(todec tools/todec.cpp)
 add_executable(tohex tools/tohex.cpp)
 add_executable(type0 tools/type0.cpp)
 add_executable(vlv tools/vlv.cpp)
+add_executable(lsmidi tools/lsmidi.cpp)
+add_executable(overlap tools/overlap.cpp)
 
 target_link_libraries(80off midifile)
 target_link_libraries(asciimidi midifile)
@@ -175,6 +177,8 @@ target_link_libraries(todec midifile)
 target_link_libraries(tohex midifile)
 target_link_libraries(type0 midifile)
 target_link_libraries(vlv midifile)
+target_link_libraries(lsmidi midifile)
+target_link_libraries(overlap midifile)
 
 if(HAVE_UNISTD_H AND HAVE_SYS_IO_H)
     add_executable(midi2beep tools/midi2beep.cpp)

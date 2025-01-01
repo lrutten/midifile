@@ -69,8 +69,8 @@ RANLIB    = ranlib
 DEFINES   =
 PREFLAGS  = -c -g -Wall -O3 $(DEFINES) -I$(INCDIR)
 
-# Using C++ 2011 standard:
-PREFLAGS += -std=c++11
+# Using C++ 2023 standard:
+PREFLAGS += -std=c++23
 
 # MinGW compiling setup (used to compile for Microsoft Windows but actual
 # compiling is usually done in Linux). You have to install MinGW and these

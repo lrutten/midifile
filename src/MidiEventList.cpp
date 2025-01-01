@@ -19,14 +19,16 @@
 #include <vector>
 
 
-namespace smf {
+namespace smf 
+{
 
 //////////////////////////////
 //
 // MidiEventList::MidiEventList -- Constructor.
 //
 
-MidiEventList::MidiEventList(void) {
+MidiEventList::MidiEventList()
+{
 	reserve(1000);
 }
 
@@ -37,10 +39,12 @@ MidiEventList::MidiEventList(void) {
 // MidiEventList::MidiEventList(MidiEventList&) -- Copy constructor.
 //
 
-MidiEventList::MidiEventList(const MidiEventList& other) {
+MidiEventList::MidiEventList(const MidiEventList& other)
+{
 	list.reserve(other.list.size());
 	auto it = other.list.begin();
-	std::generate_n(std::back_inserter(list), other.list.size(), [&]() -> MidiEvent* {
+	std::generate_n(std::back_inserter(list), other.list.size(), [&]() -> MidiEvent* 
+	{
 		return new MidiEvent(**it++);
 	});
 }
@@ -52,7 +56,8 @@ MidiEventList::MidiEventList(const MidiEventList& other) {
 // MidiEventList::MidiEventList(MidiEventList&&) -- Move constructor.
 //
 
-MidiEventList::MidiEventList(MidiEventList&& other) {
+MidiEventList::MidiEventList(MidiEventList&& other)
+{
 	list = std::move(other.list);
 	other.list.clear();
 }
@@ -65,7 +70,8 @@ MidiEventList::MidiEventList(MidiEventList&& other) {
 //   data.
 //
 
-MidiEventList::~MidiEventList() {
+MidiEventList::~MidiEventList()
+{
 	clear();
 }
 
@@ -76,12 +82,14 @@ MidiEventList::~MidiEventList() {
 // MidiEventList::operator[] --
 //
 
-MidiEvent&  MidiEventList::operator[](int index) {
+MidiEvent&  MidiEventList::operator[](int index)
+{
 	return *list[index];
 }
 
 
-const MidiEvent&  MidiEventList::operator[](int index) const {
+const MidiEvent&  MidiEventList::operator[](int index) const 
+{
 	return *list[index];
 }
 
@@ -92,12 +100,14 @@ const MidiEvent&  MidiEventList::operator[](int index) const {
 // MidiEventList::back -- Return the last element in the list.
 //
 
-MidiEvent& MidiEventList::back(void) {
+MidiEvent& MidiEventList::back()
+{
 	return *list.back();
 }
 
 
-const MidiEvent& MidiEventList::back(void) const {
+const MidiEvent& MidiEventList::back() const
+{
 	return *list.back();
 }
 
@@ -105,12 +115,14 @@ const MidiEvent& MidiEventList::back(void) const {
 // MidiEventList::last -- Alias for MidiEventList::back().
 //
 
-MidiEvent& MidiEventList::last(void) {
+MidiEvent& MidiEventList::last()
+{
 	return back();
 }
 
 
-const MidiEvent& MidiEventList::last(void) const {
+const MidiEvent& MidiEventList::last() const 
+{
 	return back();
 }
 
@@ -122,12 +134,14 @@ const MidiEvent& MidiEventList::last(void) const {
 //      internal use when operator[] would look more messy.
 //
 
-MidiEvent& MidiEventList::getEvent(int index) {
+MidiEvent& MidiEventList::getEvent(int index)
+{
 	return *list[index];
 }
 
 
-const MidiEvent& MidiEventList::getEvent(int index) const {
+const MidiEvent& MidiEventList::getEvent(int index) const
+{
 	return *list[index];
 }
 
@@ -139,9 +153,12 @@ const MidiEvent& MidiEventList::getEvent(int index) const {
 //    and set the size of the list to 0.
 //
 
-void MidiEventList::clear(void) {
-	for (auto& item : list) {
-		if (item != NULL) {
+void MidiEventList::clear()
+{
+	for (auto& item : list)
+   {
+		if (item != NULL)
+      {
 			delete item;
 			item = NULL;
 		}
@@ -158,7 +175,8 @@ void MidiEventList::clear(void) {
 //     function to the list.
 //
 
-MidiEvent** MidiEventList::data(void) {
+MidiEvent** MidiEventList::data()
+{
 	return list.data();
 }
 
@@ -170,8 +188,10 @@ MidiEvent** MidiEventList::data(void) {
 //     elements.
 //
 
-void MidiEventList::reserve(int rsize) {
-	if (rsize > (int)list.size()) {
+void MidiEventList::reserve(int rsize)
+{
+	if (rsize > (int)list.size())
+   {
 		list.reserve(rsize);
 	}
 }
@@ -183,7 +203,8 @@ void MidiEventList::reserve(int rsize) {
 //     in the list.
 //
 
-int MidiEventList::getSize(void) const {
+int MidiEventList::getSize() const
+{
 	return (int)list.size();
 }
 
@@ -191,7 +212,8 @@ int MidiEventList::getSize(void) const {
 // MidiEventList::size -- Alias for MidiEventList::getSize().
 //
 
-int MidiEventList::size(void) const {
+int MidiEventList::size() const
+{
 	return getSize();
 }
 
@@ -199,7 +221,8 @@ int MidiEventList::size(void) const {
 // MidiEventList::getEventCount -- Alias for MidiEventList::getSize().
 //
 
-int MidiEventList::getEventCount(void) const {
+int MidiEventList::getEventCount() const
+{
 	return getSize();
 }
 
@@ -211,7 +234,8 @@ int MidiEventList::getEventCount(void) const {
 //     the index of the appended event.
 //
 
-int MidiEventList::append(MidiEvent& event) {
+int MidiEventList::append(MidiEvent& event)
+{
 	MidiEvent* ptr = new MidiEvent(event);
 	list.push_back(ptr);
 	return (int)list.size()-1;
@@ -221,7 +245,8 @@ int MidiEventList::append(MidiEvent& event) {
 // MidiEventList::push -- Alias for MidiEventList::append().
 //
 
-int MidiEventList::push(MidiEvent& event) {
+int MidiEventList::push(MidiEvent& event)
+{
 	return append(event);
 }
 
@@ -229,7 +254,8 @@ int MidiEventList::push(MidiEvent& event) {
 // MidiEventList::push_back -- Alias for MidiEventList::append().
 //
 
-int MidiEventList::push_back(MidiEvent& event) {
+int MidiEventList::push_back(MidiEvent& event)
+{
 	return append(event);
 }
 
@@ -242,22 +268,28 @@ int MidiEventList::push_back(MidiEvent& event) {
 //    removes them from the list of events.
 //
 
-void MidiEventList::removeEmpties(void) {
+void MidiEventList::removeEmpties()
+{
 	int count = 0;
-	for (auto& item : list) {
-		if (item->empty()) {
+	for (auto& item : list)
+   {
+		if (item->empty())
+      {
 			delete item;
 			item = NULL;
 			count++;
 		}
 	}
-	if (count == 0) {
+	if (count == 0)
+   {
 		return;
 	}
 	std::vector<MidiEvent*> newlist;
 	newlist.reserve(list.size() - count);
-	for (auto& item : list) {
-		if (item) {
+	for (auto& item : list)
+   {
+		if (item)
+      {
 			newlist.push_back(item);
 		}
 	}
@@ -278,12 +310,14 @@ void MidiEventList::removeEmpties(void) {
 //   of linked notes (note-on/note-off pairs).
 //
 
-int MidiEventList::linkEventPairs(void) {
+int MidiEventList::linkEventPairs()
+{
 	return linkNotePairs();
 }
 
 
-int MidiEventList::linkNotePairs(void) {
+int MidiEventList::linkNotePairs()
+{
 
 	// Note-on states:
 	// dimension 1: MIDI channel (0-15)
@@ -291,7 +325,8 @@ int MidiEventList::linkNotePairs(void) {
 	// dimension 3: List of active note-ons or note-offs.
 	std::vector<std::vector<std::vector<MidiEvent*>>> noteons;
 	noteons.resize(16);
-	for (auto& noteon : noteons) {
+	for (auto& noteon : noteons)
+   {
 		noteon.resize(128);
 	}
 
@@ -348,7 +383,8 @@ int MidiEventList::linkNotePairs(void) {
 	contevents.resize(18);
 	std::vector<std::vector<int>> oldstates;
 	oldstates.resize(18);
-	for (int i=0; i<18; i++) {
+	for (int i=0; i<18; i++)
+   {
 		contevents[i].resize(16);
 		std::fill(contevents[i].begin(), contevents[i].end(), nullptr);
 		oldstates[i].resize(16);
@@ -366,42 +402,62 @@ int MidiEventList::linkNotePairs(void) {
 	int counter = 0;
 	MidiEvent* mev;
 	MidiEvent* noteon;
-	for (int i=0; i<getSize(); i++) {
+	for (int i=0; i<getSize(); i++)
+   {
 		mev = &getEvent(i);
 		mev->unlinkEvent();
-		if (mev->isNoteOn()) {
+		if (mev->isNoteOn())
+      {
 			// store the note-on to pair later with a note-off message.
 			key = mev->getKeyNumber();
 			channel = mev->getChannel();
 			noteons[channel][key].push_back(mev);
-		} else if (mev->isNoteOff()) {
+		} 
+		else 
+		if (mev->isNoteOff())
+      {
 			key = mev->getKeyNumber();
 			channel = mev->getChannel();
-			if (noteons[channel][key].size() > 0) {
+			if (noteons[channel][key].size() > 0)
+         {
 				noteon = noteons[channel][key].back();
 				noteons[channel][key].pop_back();
 				noteon->linkEvent(mev);
 				counter++;
 			}
-		} else if (mev->isController()) {
+		} 
+		else
+		if (mev->isController())
+      {
 			contnum = mev->getP1();
-			if (contmap[contnum].first) {
+			if (contmap[contnum].first)
+         {
 				conti     = contmap[contnum].second;
 				channel   = mev->getChannel();
 				contval   = mev->getP2();
 				contstate = contval < 64 ? 0 : 1;
-				if ((oldstates[conti][channel] == -1) && contstate) {
+				if ((oldstates[conti][channel] == -1) && contstate)
+            {
 					// a newly initialized onstate was detected, so store for
 					// later linking to an off state.
 					contevents[conti][channel] = mev;
 					oldstates[conti][channel] = contstate;
-				} else if (oldstates[conti][channel] == contstate) {
+				} 
+				else
+				if (oldstates[conti][channel] == contstate)
+            {
 					// the controller state is redundant and will be ignored.
-				} else if ((oldstates[conti][channel] == 0) && contstate) {
+				}
+				else
+				if ((oldstates[conti][channel] == 0) && contstate)
+            {
 					// controller is currently off, so store on-state for next link
 					contevents[conti][channel] = mev;
 					oldstates[conti][channel] = contstate;
-				} else if ((oldstates[conti][channel] == 1) && (contstate == 0)) {
+				}
+				else
+				if ((oldstates[conti][channel] == 1) && (contstate == 0))
+            {
 					// controller has just been turned off, so link to
 					// stored on-message.
 					contevents[conti][channel]->linkEvent(mev);
@@ -422,8 +478,10 @@ int MidiEventList::linkNotePairs(void) {
 // MidiEventList::clearLinks -- remove all note-on/note-off links.
 //
 
-void MidiEventList::clearLinks(void) {
-	for (int i=0; i<(int)getSize(); i++) {
+void MidiEventList::clearLinks()
+{
+	for (int i=0; i<(int)getSize(); i++)
+   {
 		getEvent(i).unlinkEvent();
 	}
 }
@@ -438,8 +496,10 @@ void MidiEventList::clearLinks(void) {
 //   occurring at the same tick may switch their ordering.
 //
 
-void MidiEventList::clearSequence(void) {
-	for (int i=0; i<getEventCount(); i++) {
+void MidiEventList::clearSequence()
+{
+	for (int i=0; i<getEventCount(); i++)
+   {
 		getEvent(i).seq = 0;
 	}
 }
@@ -461,8 +521,10 @@ void MidiEventList::clearSequence(void) {
 //   default value: sequence = 1.
 //
 
-int MidiEventList::markSequence(int sequence) {
-	for (int i=0; i<getEventCount(); i++) {
+int MidiEventList::markSequence(int sequence)
+{
+	for (int i=0; i<getEventCount(); i++)
+   {
 		getEvent(i).seq = sequence++;
 	}
 	return sequence;
@@ -482,7 +544,8 @@ int MidiEventList::markSequence(int sequence) {
 //
 
 
-void MidiEventList::detach(void) {
+void MidiEventList::detach()
+{
 	list.resize(0);
 }
 
@@ -495,7 +558,8 @@ void MidiEventList::detach(void) {
 //     remote location is used.  Returns the index of the appended event.
 //
 
-int MidiEventList::push_back_no_copy(MidiEvent* event) {
+int MidiEventList::push_back_no_copy(MidiEvent* event)
+{
 	list.push_back(event);
 	return (int)list.size()-1;
 }
@@ -507,7 +571,8 @@ int MidiEventList::push_back_no_copy(MidiEvent* event) {
 // MidiEventList::operator=(MidiEventList) -- Assignment.
 //
 
-MidiEventList& MidiEventList::operator=(MidiEventList& other) {
+MidiEventList& MidiEventList::operator=(MidiEventList& other)
+{
 	list.swap(other.list);
 	return *this;
 }
@@ -526,7 +591,8 @@ MidiEventList& MidiEventList::operator=(MidiEventList& other) {
 //    does not know about delta/absolute tick states of its contents).
 //
 
-void MidiEventList::sort(void) {
+void MidiEventList::sort()
+{
 	qsort(data(), getEventCount(), sizeof(MidiEvent*), eventcompare);
 }
 
@@ -549,69 +615,119 @@ void MidiEventList::sort(void) {
 //    (5) note-ons come after all other regular MIDI messages.
 //
 
-int eventcompare(const void* a, const void* b) {
+int eventcompare(const void* a, const void* b)
+{
 	MidiEvent& aevent = **((MidiEvent**)a);
 	MidiEvent& bevent = **((MidiEvent**)b);
 
-	if (aevent.tick > bevent.tick) {
+	if (aevent.tick > bevent.tick)
+   {
 		// aevent occurs after bevent
 		return +1;
-	} else if (aevent.tick < bevent.tick) {
+	}
+	else
+	if (aevent.tick < bevent.tick)
+   {
 		// aevent occurs before bevent
 		return -1;
-	} else if ((aevent.seq != 0) && (bevent.seq != 0) && (aevent.seq > bevent.seq)) {
+	}
+	else
+	if ((aevent.seq != 0) && (bevent.seq != 0) && (aevent.seq > bevent.seq))
+   {
 		// aevent sequencing state occurs after bevent
 		// see MidiEventList::markSequence()
 		return +1;
-	} else if ((aevent.seq != 0) && (bevent.seq != 0) && (aevent.seq < bevent.seq)) {
+	}
+	else
+	if ((aevent.seq != 0) && (bevent.seq != 0) && (aevent.seq < bevent.seq))
+   {
 		// aevent sequencing state occurs before bevent
 		// see MidiEventList::markSequence()
 		return -1;
-	} else if (aevent.getP0() == 0xff && aevent.getP1() == 0x2f) {
+	}
+	else
+   if (aevent.getP0() == 0xff && aevent.getP1() == 0x2f)
+   {
 		// end-of-track meta-message should always be last (but won't really
 		// matter since the writing function ignores all end-of-track messages
 		// and writes its own.
 		return +1;
-	} else if (bevent.getP0() == 0xff && bevent.getP1() == 0x2f) {
+	}
+	else
+	if (bevent.getP0() == 0xff && bevent.getP1() == 0x2f)
+   {
 		// end-of-track meta-message should always be last (but won't really
 		// matter since the writing function ignores all end-of-track messages
 		// and writes its own.
 		return -1;
-	} else if (aevent.getP0() == 0xff && bevent.getP0() != 0xff) {
+	}
+	else
+   if (aevent.getP0() == 0xff && bevent.getP0() != 0xff)
+   {
 		// other meta-messages are placed before real MIDI messages
 		return -1;
-	} else if (aevent.getP0() != 0xff && bevent.getP0() == 0xff) {
+	}
+	else
+	if (aevent.getP0() != 0xff && bevent.getP0() == 0xff)
+   {
 		// other meta-messages are placed before real MIDI messages
 		return +1;
-	} else if (((aevent.getP0() & 0xf0) == 0x90) && (aevent.getP2() != 0)) {
+	}
+	else
+	if (((aevent.getP0() & 0xf0) == 0x90) && (aevent.getP2() != 0))
+   {
 		// note-ons come after all other types of MIDI messages
 		return +1;
-	} else if (((bevent.getP0() & 0xf0) == 0x90) && (bevent.getP2() != 0)) {
+	}
+	else
+	if (((bevent.getP0() & 0xf0) == 0x90) && (bevent.getP2() != 0))
+   {
 		// note-ons come after all other types of MIDI messages
 		return -1;
-	} else if (((aevent.getP0() & 0xf0) == 0x90) || ((aevent.getP0() & 0xf0) == 0x80)) {
+	}
+	else
+	if (((aevent.getP0() & 0xf0) == 0x90) || ((aevent.getP0() & 0xf0) == 0x80))
+   {
 		// note-offs come after all other MIDI messages (except note-ons)
 		return +1;
-	} else if (((bevent.getP0() & 0xf0) == 0x90) || ((bevent.getP0() & 0xf0) == 0x80)) {
+	}
+	else
+	if (((bevent.getP0() & 0xf0) == 0x90) || ((bevent.getP0() & 0xf0) == 0x80))
+   {
 		// note-offs come after all other MIDI messages (except note-ons)
 		return -1;
-	} else if (((aevent.getP0() & 0xf0) == 0xb0) && ((bevent.getP0() & 0xf0) == 0xb0)) {
+	}
+	else
+	if (((aevent.getP0() & 0xf0) == 0xb0) && ((bevent.getP0() & 0xf0) == 0xb0))
+   {
 		// both events are continuous controllers.  Sort them by controller number
-		if (aevent.getP1() > bevent.getP1()) {
+		if (aevent.getP1() > bevent.getP1())
+      {
 			return +1;
-		} if (aevent.getP1() < bevent.getP1()) {
+		}
+		if (aevent.getP1() < bevent.getP1())
+      {
 			return -1;
-		} else {
+		} 
+		else 
+		{
 			// same controller number, so sort by data value
-			if (aevent.getP2() > bevent.getP2()) {
+			if (aevent.getP2() > bevent.getP2())
+         {
 				return +1;
-			} if (aevent.getP2() < bevent.getP2()) {
+			} 
+			if (aevent.getP2() < bevent.getP2())
+         {
 				return -1;
-			} else {
+			}
+			else
+			{
 				return 0;
 			}
 		}
-	} else {
+	} 
+	else
+	{
 		return 0;
 	}
 }

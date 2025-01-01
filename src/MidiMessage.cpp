@@ -27,45 +27,53 @@ namespace smf {
 // MidiMessage::MidiMessage -- Constructor.
 //
 
-MidiMessage::MidiMessage(void) : vector<uchar>() {
+MidiMessage::MidiMessage() : vector<uchar>()
+{
 	// do nothing
 }
 
 
-MidiMessage::MidiMessage(int command) : vector<uchar>(1, (uchar)command) {
+MidiMessage::MidiMessage(int command) : vector<uchar>(1, (uchar)command)
+{
 	// do nothing
 }
 
 
-MidiMessage::MidiMessage(int command, int p1) : vector<uchar>(2) {
+MidiMessage::MidiMessage(int command, int p1) : vector<uchar>(2)
+{
 	(*this)[0] = (uchar)command;
 	(*this)[1] = (uchar)p1;
 }
 
 
-MidiMessage::MidiMessage(int command, int p1, int p2) : vector<uchar>(3) {
+MidiMessage::MidiMessage(int command, int p1, int p2) : vector<uchar>(3)
+{
 	(*this)[0] = (uchar)command;
 	(*this)[1] = (uchar)p1;
 	(*this)[2] = (uchar)p2;
 }
 
 
-MidiMessage::MidiMessage(const MidiMessage& message) : vector<uchar>() {
+MidiMessage::MidiMessage(const MidiMessage& message) : vector<uchar>()
+{
 	(*this) = message;
 }
 
 
-MidiMessage::MidiMessage(const std::vector<uchar>& message) : vector<uchar>() {
+MidiMessage::MidiMessage(const std::vector<uchar>& message) : vector<uchar>()
+{
 	setMessage(message);
 }
 
 
-MidiMessage::MidiMessage(const std::vector<char>& message) : vector<uchar>() {
+MidiMessage::MidiMessage(const std::vector<char>& message) : vector<uchar>()
+{
 	setMessage(message);
 }
 
 
-MidiMessage::MidiMessage(const std::vector<int>& message) : vector<uchar>() {
+MidiMessage::MidiMessage(const std::vector<int>& message) : vector<uchar>()
+{
 	setMessage(message);
 }
 
@@ -76,7 +84,8 @@ MidiMessage::MidiMessage(const std::vector<int>& message) : vector<uchar>() {
 // MidiMessage::~MidiMessage -- Deconstructor.
 //
 
-MidiMessage::~MidiMessage() {
+MidiMessage::~MidiMessage()
+{
 	resize(0);
 }
 
@@ -87,8 +96,10 @@ MidiMessage::~MidiMessage() {
 // MidiMessage::operator= --
 //
 
-MidiMessage& MidiMessage::operator=(const MidiMessage& message) {
-	if (this == &message) {
+MidiMessage& MidiMessage::operator=(const MidiMessage& message)
+{
+	if (this == &message)
+   {
 		return *this;
 	}
 	std::vector<uchar>::operator=(static_cast<const std::vector<uchar> &>(message));
@@ -96,8 +107,10 @@ MidiMessage& MidiMessage::operator=(const MidiMessage& message) {
 }
 
 
-MidiMessage& MidiMessage::operator=(const std::vector<uchar>& bytes) {
-	if (this == &bytes) {
+MidiMessage& MidiMessage::operator=(const std::vector<uchar>& bytes)
+{
+	if (this == &bytes)
+   {
 		return *this;
 	}
 	setMessage(bytes);
@@ -105,13 +118,15 @@ MidiMessage& MidiMessage::operator=(const std::vector<uchar>& bytes) {
 }
 
 
-MidiMessage& MidiMessage::operator=(const std::vector<char>& bytes) {
+MidiMessage& MidiMessage::operator=(const std::vector<char>& bytes)
+{
 	setMessage(bytes);
 	return *this;
 }
 
 
-MidiMessage& MidiMessage::operator=(const std::vector<int>& bytes) {
+MidiMessage& MidiMessage::operator=(const std::vector<int>& bytes)
+{
 	setMessage(bytes);
 	return *this;
 }
@@ -125,7 +140,8 @@ MidiMessage& MidiMessage::operator=(const std::vector<int>& bytes) {
 //     to any specific values.
 //
 
-void MidiMessage::setSize(int asize) {
+void MidiMessage::setSize(int asize)
+{
 	this->resize(asize);
 }
 
@@ -136,7 +152,8 @@ void MidiMessage::setSize(int asize) {
 // MidiMessage::getSize -- Return the size of the MIDI message bytes.
 //
 
-int MidiMessage::getSize(void) const {
+int MidiMessage::getSize() const
+{
 	return (int)this->size();
 }
 
@@ -151,17 +168,21 @@ int MidiMessage::getSize(void) const {
 //   modification by this command.
 //
 
-int MidiMessage::setSizeToCommand(void) {
+int MidiMessage::setSizeToCommand()
+{
 	int osize = (int)this->size();
-	if (osize < 1) {
+	if (osize < 1)
+   {
 		return 0;
 	}
 	int command = getCommandNibble();
-	if (command < 0) {
+	if (command < 0)
+   {
 		return 0;
 	}
 	int bytecount = 1;
-	switch (command) {
+	switch (command)
+   {
 		case 0x80: bytecount = 2; break;  // Note Off
 		case 0x90: bytecount = 2; break;  // Note On
 		case 0xA0: bytecount = 2; break;  // Aftertouch
@@ -173,9 +194,11 @@ int MidiMessage::setSizeToCommand(void) {
 		default:
 			return (int)size();
 	}
-	if (bytecount + 1 < osize) {
+	if (bytecount + 1 < osize)
+   {
 		resize(bytecount+1);
-		for (int i=osize; i<bytecount+1; i++) {
+		for (int i=osize; i<bytecount+1; i++)
+      {
 			(*this)[i] = 0;
 		}
 	}
@@ -184,7 +207,8 @@ int MidiMessage::setSizeToCommand(void) {
 }
 
 
-int MidiMessage::resizeToCommand(void) {
+int MidiMessage::resizeToCommand()
+{
 	return setSizeToCommand();
 }
 
@@ -197,16 +221,21 @@ int MidiMessage::resizeToCommand(void) {
 //      Returns -1 if the MIDI message is not a tempo meta message.
 //
 
-int MidiMessage::getTempoMicro(void) const {
-	if (!isTempo()) {
+int MidiMessage::getTempoMicro() const
+{
+	if (!isTempo())
+   {
 		return -1;
-	} else {
+	}
+	else
+	{
 		return ((*this)[3] << 16) + ((*this)[4] << 8) + (*this)[5];
 	}
 }
 
 
-int MidiMessage::getTempoMicroseconds(void) const {
+int MidiMessage::getTempoMicroseconds() const
+{
 	return getTempoMicro();
 }
 
@@ -219,11 +248,15 @@ int MidiMessage::getTempoMicroseconds(void) const {
 //      tempo meta message.
 //
 
-double MidiMessage::getTempoSeconds(void) const {
+double MidiMessage::getTempoSeconds() const
+{
 	int microseconds = getTempoMicroseconds();
-	if (microseconds < 0) {
+	if (microseconds < 0)
+   {
 		return -1.0;
-	} else {
+	}
+	else
+	{
 		return (double)microseconds / 1000000.0;
 	}
 }
@@ -236,9 +269,11 @@ double MidiMessage::getTempoSeconds(void) const {
 //   Returns -1 if the MidiMessage is note a tempo meta message.
 //
 
-double MidiMessage::getTempoBPM(void) const {
+double MidiMessage::getTempoBPM() const
+{
 	int microseconds = getTempoMicroseconds();
-	if (microseconds < 0) {
+	if (microseconds < 0)
+   {
 		return -1.0;
 	}
 	return 60000000.0 / (double)microseconds;
@@ -251,11 +286,15 @@ double MidiMessage::getTempoBPM(void) const {
 // MidiMessage::getTempoTPS -- Returns the tempo in terms of ticks per seconds.
 //
 
-double MidiMessage::getTempoTPS(int tpq) const {
+double MidiMessage::getTempoTPS(int tpq) const
+{
 	int microseconds = getTempoMicroseconds();
-	if (microseconds < 0) {
+	if (microseconds < 0)
+   {
 		return -1.0;
-	} else {
+	} 
+	else
+	{
 		return tpq * 1000000.0 / (double)microseconds;
 	}
 }
@@ -267,11 +306,15 @@ double MidiMessage::getTempoTPS(int tpq) const {
 // MidiMessage::getTempoSPT -- Returns the tempo in terms of seconds per tick.
 //
 
-double MidiMessage::getTempoSPT(int tpq) const {
+double MidiMessage::getTempoSPT(int tpq) const
+{
 	int microseconds = getTempoMicroseconds();
-	if (microseconds < 0) {
+	if (microseconds < 0)
+   {
 		return -1.0;
-	} else {
+	}
+	else
+	{
 		return (double)microseconds / 1000000.0 / tpq;
 	}
 }
@@ -284,25 +327,36 @@ double MidiMessage::getTempoSPT(int tpq) const {
 //      (when the command byte is 0xff).
 //
 
-bool MidiMessage::isMeta(void) const {
-	if (size() == 0) {
+bool MidiMessage::isMeta() const
+{
+	if (size() == 0)
+   {
 		return false;
-	} else if ((*this)[0] != 0xff) {
+	}
+	else
+   if ((*this)[0] != 0xff)
+   {
 		return false;
-	} else if (size() < 3) {
+	}
+	else 
+   if (size() < 3)
+   {
 		// meta message is ill-formed.
 		// meta messages must have at least three bytes:
 		//    0: 0xff == meta message marker
 		//    1: meta message type
 		//    2: meta message data bytes to follow
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
 
 
-bool MidiMessage::isMetaMessage(void) const {
+bool MidiMessage::isMetaMessage() const
+{
 	return isMeta();
 }
 
@@ -314,16 +368,26 @@ bool MidiMessage::isMetaMessage(void) const {
 //     or if the command nibble is 0x90 with p2=0 velocity.
 //
 
-bool MidiMessage::isNoteOff(void) const {
+bool MidiMessage::isNoteOff() const
+{
 	const MidiMessage& message = *this;
 	const vector<uchar>& chars = message;
-	if (message.size() != 3) {
+	if (message.size() != 3)
+   {
 		return false;
-	} else if ((chars[0] & 0xf0) == 0x80) {
+	}
+	else
+	   if ((chars[0] & 0xf0) == 0x80)
+   {
 		return true;
-	} else if (((chars[0] & 0xf0) == 0x90) && (chars[2] == 0x00)) {
+	} 
+	else
+   if (((chars[0] & 0xf0) == 0x90) && (chars[2] == 0x00))
+   {
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -336,14 +400,24 @@ bool MidiMessage::isNoteOff(void) const {
 //    range and the velocity is non-zero
 //
 
-bool MidiMessage::isNoteOn(void) const {
-	if (size() != 3) {
+bool MidiMessage::isNoteOn() const
+{
+	if (size() != 3)
+   {
 		return false;
-	} else if (((*this)[0] & 0xf0) != 0x90) {
+	}
+	else
+   if (((*this)[0] & 0xf0) != 0x90)
+   {
 		return false;
-	} else if ((*this)[2] == 0) {
+	}
+	else
+   if ((*this)[2] == 0)
+   {
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -356,7 +430,8 @@ bool MidiMessage::isNoteOn(void) const {
 //     message.
 //
 
-bool MidiMessage::isNote(void) const {
+bool MidiMessage::isNote() const
+{
 	return isNoteOn() || isNoteOff();
 }
 
@@ -368,12 +443,19 @@ bool MidiMessage::isNote(void) const {
 //    range.
 //
 
-bool MidiMessage::isAftertouch(void) const {
-	if (size() != 3) {
+bool MidiMessage::isAftertouch() const
+{
+	if (size() != 3)
+   {
 		return false;
-	} else if (((*this)[0] & 0xf0) != 0xA0) {
+	}
+	else
+   if (((*this)[0] & 0xf0) != 0xA0)
+   {
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -386,12 +468,19 @@ bool MidiMessage::isAftertouch(void) const {
 //    range and there are two additional data bytes.
 //
 
-bool MidiMessage::isController(void) const {
-	if (size() != 3) {
+bool MidiMessage::isController() const
+{
+	if (size() != 3)
+   {
 		return false;
-	} else if (((*this)[0] & 0xf0) != 0xB0) {
+	}
+	else
+   if (((*this)[0] & 0xf0) != 0xB0)
+   {
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -404,13 +493,18 @@ bool MidiMessage::isController(void) const {
 //    control event.  Controller 64 is the sustain pedal for general MIDI.
 //
 
-bool MidiMessage::isSustain(void) const {
-	if (!isController()) {
+bool MidiMessage::isSustain() const
+{
+	if (!isController())
+   {
 		return false;
 	}
-	if (getP1() == 64) {
+	if (getP1() == 64)
+   {
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -423,13 +517,18 @@ bool MidiMessage::isSustain(void) const {
 //     Sustain-on is a value in the range from 64-127 for controller 64.
 //
 
-bool MidiMessage::isSustainOn(void) const {
-	if (!isSustain()) {
+bool MidiMessage::isSustainOn() const
+{
+	if (!isSustain())
+   {
 		return false;
 	}
-	if (getP2() >= 64) {
+	if (getP2() >= 64)
+   {
 		return true;
-	} else {
+	} 
+	else
+	{
 		return false;
 	}
 }
@@ -442,13 +541,18 @@ bool MidiMessage::isSustainOn(void) const {
 //     Sustain-off is a value in the range from 0-63 for controller 64.
 //
 
-bool MidiMessage::isSustainOff(void) const {
-	if (!isSustain()) {
+bool MidiMessage::isSustainOff() const
+{
+	if (!isSustain())
+   {
 		return false;
 	}
-	if (getP2() < 64) {
+	if (getP2() < 64)
+   {
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -461,13 +565,18 @@ bool MidiMessage::isSustainOff(void) const {
 //    control event.  Controller 67 is the sustain pedal for general MIDI.
 //
 
-bool MidiMessage::isSoft(void) const {
-	if (!isController()) {
+bool MidiMessage::isSoft() const
+{
+	if (!isController())
+   {
 		return false;
 	}
-	if (getP1() == 67) {
+	if (getP1() == 67)
+   {
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -480,13 +589,18 @@ bool MidiMessage::isSoft(void) const {
 //     Soft-on is a value in the range from 64-127 for controller 67.
 //
 
-bool MidiMessage::isSoftOn(void) const {
-	if (!isSoft()) {
+bool MidiMessage::isSoftOn() const
+{
+	if (!isSoft())
+   {
 		return false;
 	}
-	if (getP2() >= 64) {
+	if (getP2() >= 64)
+   {
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -499,13 +613,18 @@ bool MidiMessage::isSoftOn(void) const {
 //     Soft-off is a value in the range from 0-63 for controller 67.
 //
 
-bool MidiMessage::isSoftOff(void) const {
-	if (!isSoft()) {
+bool MidiMessage::isSoftOff() const
+{
+	if (!isSoft())
+   {
 		return false;
 	}
-	if (getP2() < 64) {
+	if (getP2() < 64)
+   {
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -518,10 +637,12 @@ bool MidiMessage::isSoftOff(void) const {
 //    (command nibble 0xc0).
 //
 
-bool MidiMessage::isTimbre(void) const {
-	if (((*this)[0] & 0xf0) != 0xc0) {
+bool MidiMessage::isTimbre() const {
+	if (((*this)[0] & 0xf0) != 0xc0)
+{
 		return false;
-	} else if (size() != 2) {
+	} else if (size() != 2)
+{
 		return false;
 	} else {
 		return true;
@@ -529,7 +650,7 @@ bool MidiMessage::isTimbre(void) const {
 }
 
 
-bool MidiMessage::isPatchChange(void) const {
+bool MidiMessage::isPatchChange() const {
 	return isTimbre();
 }
 
@@ -541,10 +662,12 @@ bool MidiMessage::isPatchChange(void) const {
 //    (command nibble 0xd0).
 //
 
-bool MidiMessage::isPressure(void) const {
-	if (((*this)[0] & 0xf0) != 0xd0) {
+bool MidiMessage::isPressure() const {
+	if (((*this)[0] & 0xf0) != 0xd0)
+{
 		return false;
-	} else if (size() != 2) {
+	} else if (size() != 2)
+{
 		return false;
 	} else {
 		return true;
@@ -559,10 +682,12 @@ bool MidiMessage::isPressure(void) const {
 //    (command nibble 0xe0).
 //
 
-bool MidiMessage::isPitchbend(void) const {
-	if (((*this)[0] & 0xf0) != 0xe0) {
+bool MidiMessage::isPitchbend() const {
+	if (((*this)[0] & 0xf0) != 0xe0)
+{
 		return false;
-	} else if (size() != 3) {
+	} else if (size() != 3)
+{
 		return false;
 	} else {
 		return true;
@@ -576,7 +701,7 @@ bool MidiMessage::isPitchbend(void) const {
 // MidiMessage::isEmpty -- Returns true if size of data array is zero.
 //
 
-bool MidiMessage::isEmpty(void) const {
+bool MidiMessage::isEmpty() const {
 	return empty();
 }
 
@@ -589,8 +714,9 @@ bool MidiMessage::isEmpty(void) const {
 //     -1.
 //
 
-int MidiMessage::getMetaType(void) const {
-	if (!isMetaMessage()) {
+int MidiMessage::getMetaType() const {
+	if (!isMetaMessage())
+{
 		return -1;
 	} else {
 		return (int)(*this)[1];
@@ -605,10 +731,12 @@ int MidiMessage::getMetaType(void) const {
 //      message describing some text (meta message type 0x01).
 //
 
-bool MidiMessage::isText(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isText() const {
+	if (!isMetaMessage())
+{
 		return false;
-	} else if ((*this)[1] != 0x01) {
+	} else if ((*this)[1] != 0x01)
+{
 		return false;
 	} else {
 		return true;
@@ -626,10 +754,12 @@ bool MidiMessage::isText(void) const {
 //      function does not check for those requirements.
 //
 
-bool MidiMessage::isCopyright(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isCopyright() const {
+	if (!isMetaMessage())
+{
 		return false;
-	} else if ((*this)[1] != 0x02) {
+	} else if ((*this)[1] != 0x02)
+{
 		return false;
 	} else {
 		return true;
@@ -644,12 +774,19 @@ bool MidiMessage::isCopyright(void) const {
 //      message describing a track name (meta message type 0x03).
 //
 
-bool MidiMessage::isTrackName(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isTrackName() const 
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x03) {
+	}
+	else
+	if ((*this)[1] != 0x03)
+   {
 		return false;
-	} else {
+	}
+	else 
+	{
 		return true;
 	}
 }
@@ -663,12 +800,18 @@ bool MidiMessage::isTrackName(void) const {
 //      (meta message type 0x04).
 //
 
-bool MidiMessage::isInstrumentName(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isInstrumentName() const
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x04) {
+	}
+	else if ((*this)[1] != 0x04)
+   {
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -682,12 +825,19 @@ bool MidiMessage::isInstrumentName(void) const {
 //      (meta message type 0x05).
 //
 
-bool MidiMessage::isLyricText(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isLyricText() const
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x05) {
+	}
+	else 
+   if ((*this)[1] != 0x05)
+   {
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -700,12 +850,19 @@ bool MidiMessage::isLyricText(void) const {
 //      describing a marker text (meta message type 0x06).
 //
 
-bool MidiMessage::isMarkerText(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isMarkerText() const
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x06) {
+	}
+	else
+   if ((*this)[1] != 0x06)
+   {
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -718,15 +875,25 @@ bool MidiMessage::isMarkerText(void) const {
 //      describing tempo (meta message type 0x51).
 //
 
-bool MidiMessage::isTempo(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isTempo() const
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x51) {
+	} 
+	else
+   if ((*this)[1] != 0x51)
+   {
 		return false;
-	} else if (size() != 6) {
+	}
+	else
+   if (size() != 6)
+   {
 		// Meta tempo message can only be 6 bytes long.
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -740,16 +907,26 @@ bool MidiMessage::isTempo(void) const {
 //      type 0x58).
 //
 
-bool MidiMessage::isTimeSignature(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isTimeSignature() const
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x58) {
+	}
+	else
+   if ((*this)[1] != 0x58)
+   {
 		return false;
-	} else if (size() != 7) {
+	} 
+	else
+   if (size() != 7)
+   {
 		// Meta time signature message can only be 7 bytes long:
 		// FF 58 <size> <top> <bot-log-2> <clocks-per-beat> <32nds>
 		return false;
-	} else {
+	}
+	else
+	{
 		return true;
 	}
 }
@@ -763,18 +940,28 @@ bool MidiMessage::isTimeSignature(void) const {
 //      type 0x59).
 //
 
-bool MidiMessage::isKeySignature(void) const {
-	if (!isMetaMessage()) {
+bool MidiMessage::isKeySignature() const 
+{
+	if (!isMetaMessage())
+   {
 		return false;
-	} else if ((*this)[1] != 0x59) {
-		return false;
-	} else if (size() != 5) {
-		// Meta key signature message can only be 5 bytes long:
-		// FF 59 <size> <accid> <mode>
-		return false;
-	} else {
-		return true;
-	}
+	} 
+	else
+   if ((*this)[1] != 0x59)
+   {
+      return false;
+   }
+   else
+   if (size() != 5)
+   {
+   // Meta key signature message can only be 5 bytes long:
+   // FF 59 <size> <accid> <mode>
+   return false;
+   } 
+   else 
+   {
+      return true;
+   }
 }
 
 
@@ -784,7 +971,8 @@ bool MidiMessage::isKeySignature(void) const {
 //      for end-of-track (meta message type 0x2f).
 //
 
-bool MidiMessage::isEndOfTrack(void) const {
+bool MidiMessage::isEndOfTrack() const
+{
 	return getMetaType() == 0x2f ? 1 : 0;
 }
 
@@ -795,7 +983,8 @@ bool MidiMessage::isEndOfTrack(void) const {
 // MidiMessage::getP0 -- Return index 1 byte, or -1 if it doesn't exist.
 //
 
-int MidiMessage::getP0(void) const {
+int MidiMessage::getP0() const
+{
 	return size() < 1 ? -1 : (*this)[0];
 }
 
@@ -806,7 +995,8 @@ int MidiMessage::getP0(void) const {
 // MidiMessage::getP1 -- Return index 1 byte, or -1 if it doesn't exist.
 //
 
-int MidiMessage::getP1(void) const {
+int MidiMessage::getP1() const
+{
 	return size() < 2 ? -1 : (*this)[1];
 }
 
@@ -817,7 +1007,8 @@ int MidiMessage::getP1(void) const {
 // MidiMessage::getP2 -- Return index 2 byte, or -1 if it doesn't exist.
 //
 
-int MidiMessage::getP2(void) const {
+int MidiMessage::getP2() const
+{
 	return size() < 3 ? -1 : (*this)[2];
 }
 
@@ -828,7 +1019,8 @@ int MidiMessage::getP2(void) const {
 // MidiMessage::getP3 -- Return index 3 byte, or -1 if it doesn't exist.
 //
 
-int MidiMessage::getP3(void) const {
+int MidiMessage::getP3() const
+{
 	return size() < 4 ? -1 : (*this)[3];
 }
 
@@ -842,15 +1034,22 @@ int MidiMessage::getP3(void) const {
 //    limit to the range 0 to 127.
 //
 
-int MidiMessage::getKeyNumber(void) const {
-	if (isNote() || isAftertouch()) {
+int MidiMessage::getKeyNumber() const
+{
+	if (isNote() || isAftertouch())
+   {
 		int output = getP1();
-		if (output < 0) {
+		if (output < 0)
+      {
 			return output;
-		} else {
+		}
+		else
+		{
 			return 0xff & output;
 		}
-	} else {
+	} 
+	else
+	{
 		return -1;
 	}
 }
@@ -864,15 +1063,22 @@ int MidiMessage::getKeyNumber(void) const {
 //   out of the range 0-127, then chop off the high-bits.
 //
 
-int MidiMessage::getVelocity(void) const {
-	if (isNote()) {
+int MidiMessage::getVelocity() const
+{
+	if (isNote())
+   {
 		int output = getP2();
-		if (output < 0) {
+		if (output < 0)
+      {
 			return output;
-		} else {
+		}
+		else
+		{
 			return 0xff & output;
 		}
-	} else {
+	}
+	else
+	{
 		return -1;
 	}
 }
@@ -887,16 +1093,23 @@ int MidiMessage::getVelocity(void) const {
 //   in value), then limit the range to to 0-127.
 //
 
-int MidiMessage::getControllerNumber(void) const {
-	if (isController()) {
+int MidiMessage::getControllerNumber() const
+{
+	if (isController())
+   {
 		int output = getP1();
-		if (output < 0) {
+		if (output < 0)
+      {
 			// -1 means no P1, although isController() is false in such a case.
 			return output;
-		} else {
+		} 
+		else 
+		{
 			return 0x7f & output;
 		}
-	} else {
+	}
+	else
+	{
 		return -1;
 	}
 }
@@ -910,16 +1123,23 @@ int MidiMessage::getControllerNumber(void) const {
 //   out of the range 0-127, then chop off the high-bits.
 //
 
-int MidiMessage::getControllerValue(void) const {
-	if (isController()) {
+int MidiMessage::getControllerValue() const
+{
+	if (isController())
+   {
 		int output = getP2();
-		if (output < 0) {
+		if (output < 0)
+      {
 			// -1 means no P2, although isController() is false in such a case.
 			return output;
-		} else {
+		}
+		else
+		{
 			return 0x7f & output;
 		}
-	} else {
+	}
+	else
+	{
 		return -1;
 	}
 }
@@ -934,8 +1154,10 @@ int MidiMessage::getControllerValue(void) const {
 //   128 to 255, but this function will not babysit you.
 //
 
-void MidiMessage::setP0(int value) {
-	if (getSize() < 1) {
+void MidiMessage::setP0(int value)
+{
+	if (getSize() < 1)
+   {
 		resize(1);
 	}
 	(*this)[0] = static_cast<uchar>(value);
@@ -952,8 +1174,10 @@ void MidiMessage::setP0(int value) {
 //   0 to 127, but this function will not babysit you.
 //
 
-void MidiMessage::setP1(int value) {
-	if (getSize() < 2) {
+void MidiMessage::setP1(int value)
+{
+	if (getSize() < 2)
+   {
 		resize(2);
 	}
 	(*this)[1] = static_cast<uchar>(value);
@@ -971,8 +1195,10 @@ void MidiMessage::setP1(int value) {
 //     from 0 to 127, but this function will not babysit you.
 //
 
-void MidiMessage::setP2(int value) {
-	if (getSize() < 3) {
+void MidiMessage::setP2(int value)
+{
+	if (getSize() < 3)
+   {
 		resize(3);
 	}
 	(*this)[2] = static_cast<uchar>(value);
@@ -990,8 +1216,10 @@ void MidiMessage::setP2(int value) {
 //     from 0 to 127, but this function will not babysit you.
 //
 
-void MidiMessage::setP3(int value) {
-	if (getSize() < 4) {
+void MidiMessage::setP3(int value)
+{
+	if (getSize() < 4)
+   {
 		resize(4);
 	}
 	(*this)[3] = static_cast<uchar>(value);
@@ -1006,10 +1234,14 @@ void MidiMessage::setP3(int value) {
 //    Limits the input value to the range from 0 to 127.
 //
 
-void MidiMessage::setKeyNumber(int value) {
-	if (isNote() || isAftertouch()) {
+void MidiMessage::setKeyNumber(int value)
+{
+	if (isNote() || isAftertouch())
+   {
 		setP1(value & 0xff);
-	} else {
+	}
+	else
+	{
 		// don't do anything since this is not a note-related message.
 	}
 }
@@ -1023,10 +1255,14 @@ void MidiMessage::setKeyNumber(int value) {
 //   from 0 to 127.
 //
 
-void MidiMessage::setVelocity(int value) {
-	if (isNote()) {
+void MidiMessage::setVelocity(int value)
+{
+	if (isNote())
+   {
 		setP2(value & 0xff);
-	} else {
+	}
+	else
+	{
 		// don't do anything since this is not a note-related message.
 	}
 }
@@ -1039,10 +1275,14 @@ void MidiMessage::setVelocity(int value) {
 //    entry, or -1 if there is not (*this)[0].
 //
 
-int MidiMessage::getCommandNibble(void) const {
-	if (size() < 1) {
+int MidiMessage::getCommandNibble() const
+{
+	if (size() < 1)
+   {
 		return -1;
-	} else {
+	}
+	else
+	{
 		return (*this)[0] & 0xf0;
 	}
 }
@@ -1055,10 +1295,14 @@ int MidiMessage::getCommandNibble(void) const {
 //    allocated.
 //
 
-int MidiMessage::getCommandByte(void) const {
-	if (size() < 1) {
+int MidiMessage::getCommandByte() const
+{
+	if (size() < 1)
+   {
 		return -1;
-	} else {
+	}
+	else
+	{
 		return (*this)[0];
 	}
 }
@@ -1073,16 +1317,21 @@ int MidiMessage::getCommandByte(void) const {
 //      not channel specific.
 //
 
-int MidiMessage::getChannelNibble(void) const {
-	if (size() < 1) {
+int MidiMessage::getChannelNibble() const
+{
+	if (size() < 1)
+   {
 		return -1;
-	} else {
+	}
+	else
+	{
 		return (*this)[0] & 0x0f;
 	}
 }
 
 
-int MidiMessage::getChannel(void) const {
+int MidiMessage::getChannel() const
+{
 	return getChannelNibble();
 }
 
@@ -1093,15 +1342,18 @@ int MidiMessage::getChannel(void) const {
 // MidiMessage::setCommandByte --
 //
 
-void MidiMessage::setCommandByte(int value) {
-	if (size() < 1) {
+void MidiMessage::setCommandByte(int value)
+{
+	if (size() < 1)
+   {
 		resize(1);
 	} else {
 		(*this)[0] = (uchar)(value & 0xff);
 	}
 }
 
-void MidiMessage::setCommand(int value) {
+void MidiMessage::setCommand(int value)
+{
 	setCommandByte(value);
 }
 
@@ -1114,14 +1366,16 @@ void MidiMessage::setCommand(int value) {
 //   the number of input parameters.
 //
 
-void MidiMessage::setCommand(int value, int p1) {
+void MidiMessage::setCommand(int value, int p1)
+{
 	this->resize(2);
 	(*this)[0] = (uchar)value;
 	(*this)[1] = (uchar)p1;
 }
 
 
-void MidiMessage::setCommand(int value, int p1, int p2) {
+void MidiMessage::setCommand(int value, int p1, int p2)
+{
 	this->resize(3);
 	(*this)[0] = (uchar)value;
 	(*this)[1] = (uchar)p1;
@@ -1135,11 +1389,14 @@ void MidiMessage::setCommand(int value, int p1, int p2) {
 // MidiMessage::setCommandNibble --
 //
 
-void MidiMessage::setCommandNibble(int value) {
-	if (this->size() < 1) {
+void MidiMessage::setCommandNibble(int value)
+{
+	if (this->size() < 1)
+   {
 		this->resize(1);
 	}
-	if (value <= 0x0f) {
+	if (value <= 0x0f)
+   {
 		(*this)[0] = ((*this)[0] & 0x0f) | ((uchar)((value << 4) & 0xf0));
 	} else {
 		(*this)[0] = ((*this)[0] & 0x0f) | ((uchar)(value & 0xf0));
@@ -1154,15 +1411,18 @@ void MidiMessage::setCommandNibble(int value) {
 // MidiMessage::setChannelNibble --
 //
 
-void MidiMessage::setChannelNibble(int value) {
-	if (this->size() < 1) {
+void MidiMessage::setChannelNibble(int value)
+{
+	if (this->size() < 1)
+   {
 		this->resize(1);
 	}
 	(*this)[0] = ((*this)[0] & 0xf0) | ((uchar)(value & 0x0f));
 }
 
 
-void MidiMessage::setChannel(int value) {
+void MidiMessage::setChannel(int value)
+{
 	setChannelNibble(value);
 }
 
@@ -1175,22 +1435,26 @@ void MidiMessage::setChannel(int value) {
 //     be altered, and will be set to 0 if it currently does not exist.
 //
 
-void MidiMessage::setParameters(int p1) {
+void MidiMessage::setParameters(int p1)
+{
 	int oldsize = (int)size();
 	resize(2);
 	(*this)[1] = (uchar)p1;
-	if (oldsize < 1) {
+	if (oldsize < 1)
+   {
 		(*this)[0] = 0;
 	}
 }
 
 
-void MidiMessage::setParameters(int p1, int p2) {
+void MidiMessage::setParameters(int p1, int p2)
+{
 	int oldsize = (int)size();
 	resize(3);
 	(*this)[1] = (uchar)p1;
 	(*this)[2] = (uchar)p2;
-	if (oldsize < 1) {
+	if (oldsize < 1)
+   {
 		(*this)[0] = 0;
 	}
 }
@@ -1202,25 +1466,31 @@ void MidiMessage::setParameters(int p1, int p2) {
 //   input list of bytes.
 //
 
-void MidiMessage::setMessage(const std::vector<uchar>& message) {
+void MidiMessage::setMessage(const std::vector<uchar>& message)
+{
 	this->resize(message.size());
-	for (int i=0; i<(int)this->size(); i++) {
+	for (int i=0; i<(int)this->size(); i++)
+   {
 		(*this)[i] = message[i];
 	}
 }
 
 
-void MidiMessage::setMessage(const std::vector<char>& message) {
+void MidiMessage::setMessage(const std::vector<char>& message)
+{
 	resize(message.size());
-	for (int i=0; i<(int)size(); i++) {
+	for (int i=0; i<(int)size(); i++)
+   {
 		(*this)[i] = (uchar)message[i];
 	}
 }
 
 
-void MidiMessage::setMessage(const std::vector<int>& message) {
+void MidiMessage::setMessage(const std::vector<int>& message)
+{
 	resize(message.size());
-	for (int i=0; i<(int)size(); i++) {
+	for (int i=0; i<(int)size(); i++)
+   {
 		(*this)[i] = (uchar)message[i];
 	}
 }
@@ -1255,14 +1525,17 @@ void MidiMessage::setMessage(const std::vector<int>& message) {
 //    silently ignored).
 //
 
-void MidiMessage::setSpelling(int base7, int accidental) {
-	if (!isNoteOn()) {
+void MidiMessage::setSpelling(int base7, int accidental)
+{
+	if (!isNoteOn())
+   {
 		return;
 	}
 	// The bottom two bits of the attack velocity are used for the
 	// spelling, so need to make sure the velocity will not accidentally
 	// be set to zero (and make the note-on a note-off).
-	if (getVelocity() < 4) {
+	if (getVelocity() < 4)
+   {
 		setVelocity(4);
 	}
 	int dpc = base7 % 7;
@@ -1270,10 +1543,12 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 
 	// Table 5.1, page 101 in Beyond MIDI (1997)
 	// http://beyondmidi.ccarh.org/beyondmidi-600dpi.pdf
-	switch (dpc) {
+	switch (dpc)
+   {
 
 		case 0:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Cbb
 				case -1: spelling = 1; break; // Cb
 				case  0: spelling = 2; break; // C
@@ -1283,7 +1558,8 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 			break;
 
 		case 1:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Dbb
 				case -1: spelling = 1; break; // Db
 				case  0: spelling = 2; break; // D
@@ -1293,7 +1569,8 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 			break;
 
 		case 2:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Ebb
 				case -1: spelling = 2; break; // Eb
 				case  0: spelling = 2; break; // E
@@ -1303,7 +1580,8 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 			break;
 
 		case 3:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Fbb
 				case -1: spelling = 1; break; // Fb
 				case  0: spelling = 2; break; // F
@@ -1314,7 +1592,8 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 			break;
 
 		case 4:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Gbb
 				case -1: spelling = 1; break; // Gb
 				case  0: spelling = 2; break; // G
@@ -1324,7 +1603,8 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 			break;
 
 		case 5:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Abb
 				case -1: spelling = 1; break; // Ab
 				case  0: spelling = 2; break; // A
@@ -1334,7 +1614,8 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 			break;
 
 		case 6:
-			switch (accidental) {
+			switch (accidental)
+         {
 				case -2: spelling = 1; break; // Bbb
 				case -1: spelling = 2; break; // Bb
 				case  0: spelling = 2; break; // B
@@ -1370,8 +1651,10 @@ void MidiMessage::setSpelling(int base7, int accidental) {
 //     The second number is the accidental for the base-7 pitch.
 //
 
-void MidiMessage::getSpelling(int& base7, int& accidental) {
-	if (!isNoteOn()) {
+void MidiMessage::getSpelling(int& base7, int& accidental)
+{
+	if (!isNoteOn())
+   {
 		return;
 	}
 	base7 = -123456;
@@ -1384,10 +1667,12 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 
 	// Table 5.1, page 101 in Beyond MIDI (1997)
 	// http://beyondmidi.ccarh.org/beyondmidi-600dpi.pdf
-	switch (base12pc) {
+	switch (base12pc)
+   {
 
 		case 0:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 1; accidental = -2; break;  // Dbb
 				case 0: case 2: base7pc = 0; accidental =  0; break;  // C
 				        case 3: base7pc = 6; accidental = +1; octave--; break;  // B#
@@ -1395,7 +1680,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 1:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 1; accidental = -1; break;  // Db
 				case 0: case 2: base7pc = 0; accidental = +1; break;  // C#
 				        case 3: base7pc = 6; accidental = +2; octave--; break;  // B##
@@ -1403,7 +1689,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 2:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 2; accidental = -2; break;  // Ebb
 				case 0: case 2: base7pc = 1; accidental =  0; break;  // D
 				        case 3: base7pc = 0; accidental = +2; break;  // C##
@@ -1411,7 +1698,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 3:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 3; accidental = -2; break;  // Fbb
 				case 0: case 2: base7pc = 2; accidental = -1; break;  // Eb
 				        case 3: base7pc = 1; accidental = +1; break;  // D#
@@ -1419,7 +1707,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 4:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 3; accidental = -1; break;  // Fb
 				case 0: case 2: base7pc = 2; accidental =  0; break;  // E
 				        case 3: base7pc = 1; accidental = +2; break;  // D##
@@ -1427,7 +1716,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 5:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 4; accidental = -2; break;  // Gbb
 				case 0: case 2: base7pc = 3; accidental =  0; break;  // F
 				        case 3: base7pc = 2; accidental = +1; break;  // E#
@@ -1435,7 +1725,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 6:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 4; accidental = -1; break;  // Gb
 				case 0: case 2: base7pc = 3; accidental = +1; break;  // F#
 				        case 3: base7pc = 2; accidental = +2; break;  // E##
@@ -1443,7 +1734,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 7:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 5; accidental = -2; break;  // Abb
 				case 0: case 2: base7pc = 4; accidental =  0; break;  // G
 				        case 3: base7pc = 3; accidental = +2; break;  // F##
@@ -1451,7 +1743,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 8:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 5; accidental = -1; break;  // Ab
 				case 0: case 2: base7pc = 4; accidental = +1; break;  // G#
 				        case 3: base7pc = 3; accidental = +3; break;  // F###
@@ -1459,7 +1752,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 9:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 6; accidental = -2; break;  // Bbb
 				case 0: case 2: base7pc = 5; accidental =  0; break;  // A
 				        case 3: base7pc = 4; accidental = +2; break;  // G##
@@ -1467,7 +1761,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 10:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 0; accidental = -2; octave++; break;  // Cbb
 				case 0: case 2: base7pc = 6; accidental = -1; break;  // Bb
 				        case 3: base7pc = 5; accidental = +1; break;  // A#
@@ -1475,7 +1770,8 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 			break;
 
 		case 11:
-			switch (spelling) {
+			switch (spelling)
+         {
 				        case 1: base7pc = 0; accidental = -1; octave++; break;  // Cb
 				case 0: case 2: base7pc = 6; accidental =  0; break;  // B
 				        case 3: base7pc = 5; accidental = +2; break;  // A##
@@ -1495,19 +1791,25 @@ void MidiMessage::getSpelling(int& base7, int& accidental) {
 //   message after the length (which is a variable-length-value).
 //
 
-std::string MidiMessage::getMetaContent(void) {
+std::string MidiMessage::getMetaContent()
+{
 	std::string output;
-	if (!isMetaMessage()) {
+	if (!isMetaMessage())
+   {
 		return output;
 	}
 	int start = 3;
-	if (operator[](2) > 0x7f) {
+	if (operator[](2) > 0x7f)
+   {
 		start++;
-		if (operator[](3) > 0x7f) {
+		if (operator[](3) > 0x7f)
+      {
 			start++;
-			if (operator[](4) > 0x7f) {
+			if (operator[](4) > 0x7f)
+         {
 				start++;
-				if (operator[](5) > 0x7f) {
+				if (operator[](5) > 0x7f)
+            {
 					start++;
 					// maximum of 5 bytes in VLV, so last must be < 0x80
 				}
@@ -1515,7 +1817,8 @@ std::string MidiMessage::getMetaContent(void) {
 		}
 	}
 	output.reserve(this->size());
-	for (int i=start; i<(int)this->size(); i++) {
+	for (int i=start; i<(int)this->size(); i++)
+   {
 		output.push_back(operator[](i));
 	}
 	return output;
@@ -1532,12 +1835,15 @@ std::string MidiMessage::getMetaContent(void) {
 //    a meta-message type.
 //
 
-void MidiMessage::setMetaContent(const std::string& content) {
-	if (this->size() < 2) {
+void MidiMessage::setMetaContent(const std::string& content)
+{
+	if (this->size() < 2)
+   {
 		// invalid message, so ignore request
 		return;
 	}
-	if (operator[](0) != 0xFF) {
+	if (operator[](0) != 0xFF)
+   {
 		// not a meta message, so ignore request
 		return;
 	}
@@ -1546,7 +1852,8 @@ void MidiMessage::setMetaContent(const std::string& content) {
 	// add the size of the meta message data (VLV)
 	int dsize = (int)content.size();
 	std::vector<uchar> vlv = intToVlv(dsize);
-	for (uchar item : vlv) {
+	for (uchar item : vlv)
+   {
 		this->push_back(item);
 	}
 	std::copy(content.begin(), content.end(), std::back_inserter(*this));
@@ -1560,7 +1867,8 @@ void MidiMessage::setMetaContent(const std::string& content) {
 //   (meta message #0x51).
 //
 
-void MidiMessage::setMetaTempo(double tempo) {
+void MidiMessage::setMetaTempo(double tempo)
+{
 	int microseconds = (int)(60.0 / tempo * 1000000.0 + 0.5);
 	setTempoMicroseconds(microseconds);
 }
@@ -1572,7 +1880,8 @@ void MidiMessage::setMetaTempo(double tempo) {
 // MidiMessage::setTempo -- Alias for MidiMessage::setMetaTempo().
 //
 
-void MidiMessage::setTempo(double tempo) {
+void MidiMessage::setTempo(double tempo)
+{
 	setMetaTempo(tempo);
 }
 
@@ -1584,14 +1893,15 @@ void MidiMessage::setTempo(double tempo) {
 //   of microseconds per quarter note.
 //
 
-void MidiMessage::setTempoMicroseconds(int microseconds) {
-	resize(6);
-	(*this)[0] = 0xff;
-	(*this)[1] = 0x51;
-	(*this)[2] = 3;
-	(*this)[3] = (microseconds >> 16) & 0xff;
-	(*this)[4] = (microseconds >>  8) & 0xff;
-	(*this)[5] = (microseconds >>  0) & 0xff;
+void MidiMessage::setTempoMicroseconds(int microseconds)
+{
+   resize(6);
+   (*this)[0] = 0xff;
+   (*this)[1] = 0x51;
+   (*this)[2] = 3;
+   (*this)[3] = (microseconds >> 16) & 0xff;
+   (*this)[4] = (microseconds >>  8) & 0xff;
+   (*this)[5] = (microseconds >>  0) & 0xff;
 }
 
 
@@ -1610,13 +1920,14 @@ void MidiMessage::setTempoMicroseconds(int microseconds) {
 //      mode   = 1
 //
 
-void MidiMessage::makeKeySignature(int fifths, bool mode) {
-    resize(5);
-    (*this)[0] = 0xff;
-    (*this)[1] = 0x59;
-    (*this)[2] = 0x02;
-    (*this)[3] = 0xff & fifths;
-    (*this)[4] = 0xff & (int)mode;
+void MidiMessage::makeKeySignature(int fifths, bool mode)
+{
+   resize(5);
+   (*this)[0] = 0xff;
+   (*this)[1] = 0x59;
+   (*this)[2] = 0x02;
+   (*this)[3] = 0xff & fifths;
+   (*this)[4] = 0xff & (int)mode;
 }
 
 
@@ -1646,7 +1957,8 @@ void MidiMessage::makeKeySignature(int fifths, bool mode) {
 //
 
 void MidiMessage::makeTimeSignature(int top, int bottom, int clocksPerClick,
-		int num32ndsPerQuarter) {
+		int num32ndsPerQuarter)
+{
 	int base2 = 0;
 	while (bottom >>= 1) base2++;
 	resize(7);
@@ -1677,7 +1989,8 @@ void MidiMessage::makeTimeSignature(int top, int bottom, int clocksPerClick,
 //   have it first...
 //
 
-void MidiMessage::makeNoteOn(int channel, int key, int velocity) {
+void MidiMessage::makeNoteOn(int channel, int key, int velocity)
+{
 	resize(3);
 	(*this)[0] = 0x90 | (0x0f & channel);
 	(*this)[1] = key & 0x7f;
@@ -1699,7 +2012,8 @@ void MidiMessage::makeNoteOn(int channel, int key, int velocity) {
 //
 
 
-void MidiMessage::makeNoteOff(int channel, int key, int velocity) {
+void MidiMessage::makeNoteOff(int channel, int key, int velocity)
+{
 	resize(3);
 	(*this)[0] = 0x80 | (0x0f & channel);
 	(*this)[1] = key & 0x7f;
@@ -1707,7 +2021,8 @@ void MidiMessage::makeNoteOff(int channel, int key, int velocity) {
 }
 
 
-void MidiMessage::makeNoteOff(int channel, int key) {
+void MidiMessage::makeNoteOff(int channel, int key)
+{
 	resize(3);
 	(*this)[0] = 0x90 | (0x0f & channel);
 	(*this)[1] = key & 0x7f;
@@ -1715,17 +2030,21 @@ void MidiMessage::makeNoteOff(int channel, int key) {
 }
 
 //
-// MidiMessage::makeNoteOff(void) -- create a 0x90 note message with
+// MidiMessage::makeNoteOff() -- create a 0x90 note message with
 //      The key and velocity set to 0.
 //
 
-void MidiMessage::makeNoteOff(void) {
-	if (!isNoteOn()) {
+void MidiMessage::makeNoteOff()
+{
+	if (!isNoteOn())
+   {
 		resize(3);
 		(*this)[0] = 0x90;
 		(*this)[1] = 0;
 		(*this)[2] = 0;
-	} else {
+	}
+	else
+	{
 		(*this)[2] = 0;
 	}
 }
@@ -1737,7 +2056,8 @@ void MidiMessage::makeNoteOff(void) {
 // MidiMessage::makePatchChange -- Create a patch-change message.
 //
 
-void MidiMessage::makePatchChange(int channel, int patchnum) {
+void MidiMessage::makePatchChange(int channel, int patchnum)
+{
 	resize(0);
 	push_back(0xc0 | (0x0f & channel));
 	push_back(0x7f & patchnum);
@@ -1747,7 +2067,8 @@ void MidiMessage::makePatchChange(int channel, int patchnum) {
 // MidiMessage::makeTimbre -- alias for MidiMessage::makePatchChange().
 //
 
-void MidiMessage::makeTimbre(int channel, int patchnum) {
+void MidiMessage::makeTimbre(int channel, int patchnum)
+{
 	makePatchChange(channel, patchnum);
 }
 
@@ -1757,7 +2078,8 @@ void MidiMessage::makeTimbre(int channel, int patchnum) {
 // MidiMessage::makeController -- Create a controller message.
 //
 
-void MidiMessage::makeController(int channel, int num, int value) {
+void MidiMessage::makeController(int channel, int num, int value)
+{
 	resize(0);
 	push_back(0xb0 | (0x0f & channel));
 	push_back(0x7f & num);
@@ -1776,7 +2098,8 @@ void MidiMessage::makeController(int channel, int num, int value) {
 //     to change the default (or change to the typical default).
 //
 
-void MidiMessage::makePitchBend(int channel, int lsb, int msb) {
+void MidiMessage::makePitchBend(int channel, int lsb, int msb)
+{
 	resize(0);
 	push_back(0xe0 | (0x0e & channel));
 	push_back(0x7f & lsb);
@@ -1788,7 +2111,8 @@ void MidiMessage::makePitchBend(int channel, int lsb, int msb) {
 //    2^15-1 is the highest pitch of the range.
 //
 
-void MidiMessage::makePitchBend(int channel, int value) {
+void MidiMessage::makePitchBend(int channel, int value)
+{
 	resize(0);
 	int lsb = value & 0x7f;
 	int msb = (value >> 7) & 0x7f;
@@ -1801,14 +2125,17 @@ void MidiMessage::makePitchBend(int channel, int value) {
 // Input value is a number between -1.0 and +1.0.
 //
 
-void MidiMessage::makePitchBendDouble(int channel, double value) {
+void MidiMessage::makePitchBendDouble(int channel, double value)
+{
 	// value is in the range from -1 for minimum and 2^18 - 1 for the maximum
 	resize(0);
 	double dvalue = (value + 1.0) * (pow(2.0, 15.0));
-	if (dvalue < 0.0) {
+	if (dvalue < 0.0)
+   {
 		dvalue = 0.0;
 	}
-	if (dvalue > pow(2.0, 15.0) - 1.0) {
+	if (dvalue > pow(2.0, 15.0) - 1.0)
+   {
 		dvalue = pow(2.0, 15.0) - 1.0;
 	}
 	ulong uivalue = (ulong)dvalue;
@@ -1828,7 +2155,8 @@ void MidiMessage::makePitchBendDouble(int channel, double value) {
 //   64-127 value is a sustain on.
 //
 
-void MidiMessage::makeSustain(int channel, int value) {
+void MidiMessage::makeSustain(int channel, int value)
+{
 	makeController(channel, 64, value);
 }
 
@@ -1836,7 +2164,8 @@ void MidiMessage::makeSustain(int channel, int value) {
 // MidiMessage::makeSustain -- Alias for MidiMessage::makeSustain().
 //
 
-void MidiMessage::makeSustainPedal(int channel, int value) {
+void MidiMessage::makeSustainPedal(int channel, int value)
+{
 	makeSustain(channel, value);
 }
 
@@ -1847,7 +2176,8 @@ void MidiMessage::makeSustainPedal(int channel, int value) {
 // MidiMessage::makeSustainOn -- Create sustain-on controller message.
 //
 
-void MidiMessage::makeSustainOn(int channel) {
+void MidiMessage::makeSustainOn(int channel)
+{
 	makeController(channel, 64, 127);
 }
 
@@ -1855,7 +2185,8 @@ void MidiMessage::makeSustainOn(int channel) {
 // MidiMessage::makeSustainPedalOn -- Alias for MidiMessage::makeSustainOn().
 //
 
-void MidiMessage::makeSustainPedalOn(int channel) {
+void MidiMessage::makeSustainPedalOn(int channel)
+{
 	makeSustainOn(channel);
 }
 
@@ -1866,7 +2197,8 @@ void MidiMessage::makeSustainPedalOn(int channel) {
 // MidiMessage::makeSustainOff -- Create a sustain-off controller message.
 //
 
-void MidiMessage::makeSustainOff(int channel) {
+void MidiMessage::makeSustainOff(int channel)
+{
 	makeController(channel, 64, 0);
 }
 
@@ -1874,7 +2206,8 @@ void MidiMessage::makeSustainOff(int channel) {
 // MidiMessage::makeSustainPedalOff -- Alias for MidiMessage::makeSustainOff().
 //
 
-void MidiMessage::makeSustainPedalOff(int channel) {
+void MidiMessage::makeSustainPedalOff(int channel)
+{
 	makeSustainOff(channel);
 }
 
@@ -1888,7 +2221,8 @@ void MidiMessage::makeSustainPedalOff(int channel) {
 //   will contain more than one byte.
 //
 
-void MidiMessage::makeMetaMessage(int mnum, const std::string& data) {
+void MidiMessage::makeMetaMessage(int mnum, const std::string& data)
+{
 	resize(0);
 	push_back(0xff);
 	push_back(mnum & 0x7f); // max meta-message number is 0x7f.
@@ -1904,7 +2238,8 @@ void MidiMessage::makeMetaMessage(int mnum, const std::string& data) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeText(const std::string& text) {
+void MidiMessage::makeText(const std::string& text)
+{
 	makeMetaMessage(0x01, text);
 }
 
@@ -1917,7 +2252,8 @@ void MidiMessage::makeText(const std::string& text) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeCopyright(const std::string& text) {
+void MidiMessage::makeCopyright(const std::string& text)
+{
 	makeMetaMessage(0x02, text);
 }
 
@@ -1930,7 +2266,8 @@ void MidiMessage::makeCopyright(const std::string& text) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeTrackName(const std::string& name) {
+void MidiMessage::makeTrackName(const std::string& name)
+{
 	makeMetaMessage(0x03, name);
 }
 
@@ -1943,7 +2280,8 @@ void MidiMessage::makeTrackName(const std::string& name) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeInstrumentName(const std::string& name) {
+void MidiMessage::makeInstrumentName(const std::string& name)
+{
 	makeMetaMessage(0x04, name);
 }
 
@@ -1956,7 +2294,8 @@ void MidiMessage::makeInstrumentName(const std::string& name) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeLyric(const std::string& text) {
+void MidiMessage::makeLyric(const std::string& text)
+{
 	makeMetaMessage(0x05, text);
 }
 
@@ -1969,7 +2308,8 @@ void MidiMessage::makeLyric(const std::string& text) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeMarker(const std::string& text) {
+void MidiMessage::makeMarker(const std::string& text)
+{
 	makeMetaMessage(0x06, text);
 }
 
@@ -1982,7 +2322,8 @@ void MidiMessage::makeMarker(const std::string& text) {
 //    within Standard MIDI Files.
 //
 
-void MidiMessage::makeCue(const std::string& text) {
+void MidiMessage::makeCue(const std::string& text)
+{
 	makeMetaMessage(0x07, text);
 }
 
@@ -1992,35 +2333,47 @@ void MidiMessage::makeCue(const std::string& text) {
 // MidiMessage::intToVlv -- Convert an integer into a VLV byte sequence.
 //
 
-std::vector<uchar> MidiMessage::intToVlv(int value) {
+std::vector<uchar> MidiMessage::intToVlv(int value)
+{
 	std::vector<uchar> output;
-	if (value < 128) {
+	if (value < 128)
+   {
 		output.push_back((uchar)value);
-	} else {
+	}
+	else
+	{
 		// calculate VLV bytes and insert into message
 		uchar byte1 = value & 0x7f;
 		uchar byte2 = (value >>  7) & 0x7f;
 		uchar byte3 = (value >> 14) & 0x7f;
 		uchar byte4 = (value >> 21) & 0x7f;
 		uchar byte5 = (value >> 28) & 0x7f;
-		if (byte5) {
+		if (byte5)
+      {
 			byte4 |= 0x80;
 		}
-		if (byte4) {
+		if (byte4)
+      {
 			byte4 |= 0x80;
 			byte3 |= 0x80;
 		}
-		if (byte3) {
+		if (byte3)
+      {
 			byte3 |= 0x80;
 			byte2 |= 0x80;
 		}
-		if (byte2) {
+		if (byte2)
+      {
 			byte2 |= 0x80;
 		}
-		if (byte5) { output.push_back(byte5); }
-		if (byte4) { output.push_back(byte4); }
-		if (byte3) { output.push_back(byte3); }
-		if (byte2) { output.push_back(byte2); }
+		if (byte5)
+      { output.push_back(byte5); }
+		if (byte4)
+      { output.push_back(byte4); }
+		if (byte3)
+      { output.push_back(byte3); }
+		if (byte2)
+      { output.push_back(byte2); }
 		output.push_back(byte1);
 	}
 
@@ -2035,16 +2388,21 @@ std::vector<uchar> MidiMessage::intToVlv(int value) {
 //    in data, but they will be double-checked for and ignored if found.
 //
 
-void MidiMessage::makeSysExMessage(const std::vector<uchar>& data) {
+void MidiMessage::makeSysExMessage(const std::vector<uchar>& data)
+{
 	int startindex = 0;
 	int endindex = (int)data.size() - 1;
-	if (data.size() > 0) {
-		if (data[0] == 0xf0) {
+	if (data.size() > 0)
+   {
+		if (data[0] == 0xf0)
+      {
 			startindex++;
 		}
 	}
-	if (data.size() > 0) {
-		if (data.back() == 0xf7) {
+	if (data.size() > 0)
+   {
+		if (data.back() == 0xf7)
+      {
 			endindex--;
 		}
 	}
@@ -2056,10 +2414,12 @@ void MidiMessage::makeSysExMessage(const std::vector<uchar>& data) {
 
 	int msize = endindex - startindex + 2;
 	std::vector<uchar> vlv = intToVlv(msize);
-	for (uchar item : vlv) {
+	for (uchar item : vlv)
+   {
 		this->push_back(item);
 	}
-	for (int i=startindex; i<=endindex; i++) {
+	for (int i=startindex; i<=endindex; i++)
+   {
 		this->push_back(data.at(i));
 	}
 	this->push_back((uchar)0xf7);
@@ -2074,17 +2434,24 @@ void MidiMessage::makeSysExMessage(const std::vector<uchar>& data) {
 //     if too low, and returns 127.0 if too high.
 //
 
-double MidiMessage::frequencyToSemitones(double frequency, double a4frequency) {
-	if (frequency < 1) {
+double MidiMessage::frequencyToSemitones(double frequency, double a4frequency)
+{
+	if (frequency < 1)
+   {
 		return 0.0;
 	}
-	if (a4frequency <= 0) {
+	if (a4frequency <= 0)
+   {
 		return 0.0;
 	}
 	double semitones = 69.0 + 12.0 * log2(frequency/a4frequency);
-	if (semitones >= 128.0) {
+	if (semitones >= 128.0)
+   {
 		return 127.0;
-	} else if (semitones < 0.0) {
+	}
+	else
+   if (semitones < 0.0)
+   {
 		return 0.0;
 	}
 	return semitones;
@@ -2097,21 +2464,25 @@ double MidiMessage::frequencyToSemitones(double frequency, double a4frequency) {
 // MidiMessage::makeMts2_KeyTuningsByFrequency -- Map a list of key numbers to specific pitches by frequency.
 //
 
-void MidiMessage::makeMts2_KeyTuningsByFrequency(int key, double frequency, int program) {
+void MidiMessage::makeMts2_KeyTuningsByFrequency(int key, double frequency, int program)
+{
 	std::vector<std::pair<int, double>> mapping;
 	mapping.push_back(std::make_pair(key, frequency));
 	this->makeMts2_KeyTuningsByFrequency(mapping, program);
 }
 
 
-void MidiMessage::makeMts2_KeyTuningByFrequency(int key, double frequency, int program) {
+void MidiMessage::makeMts2_KeyTuningByFrequency(int key, double frequency, int program)
+{
 	this->makeMts2_KeyTuningsByFrequency(key, frequency, program);
 }
 
 
-void MidiMessage::makeMts2_KeyTuningsByFrequency(std::vector<std::pair<int, double>>& mapping, int program) {
+void MidiMessage::makeMts2_KeyTuningsByFrequency(std::vector<std::pair<int, double>>& mapping, int program)
+{
 	std::vector<std::pair<int, double>> semimap(mapping.size());
-	for (int i=0; i<(int)mapping.size(); i++) {
+	for (int i=0; i<(int)mapping.size(); i++)
+   {
 		semimap[i].first = mapping[i].first;
 		semimap[i].second = MidiMessage::frequencyToSemitones(mapping[i].second);
 	}
@@ -2126,22 +2497,29 @@ void MidiMessage::makeMts2_KeyTuningsByFrequency(std::vector<std::pair<int, doub
 //    semitones (MIDI key numbers with fractional values).
 //
 
-void MidiMessage::makeMts2_KeyTuningsBySemitone(int key, double semitone, int program) {
+void MidiMessage::makeMts2_KeyTuningsBySemitone(int key, double semitone, int program)
+{
 	std::vector<std::pair<int, double>> semimap;
 	semimap.push_back(std::make_pair(key, semitone));
 	this->makeMts2_KeyTuningsBySemitone(semimap, program);
 }
 
 
-void MidiMessage::makeMts2_KeyTuningBySemitone(int key, double semitone, int program) {
+void MidiMessage::makeMts2_KeyTuningBySemitone(int key, double semitone, int program)
+{
 	this->makeMts2_KeyTuningsBySemitone(key, semitone, program);
 }
 
 
-void MidiMessage::makeMts2_KeyTuningsBySemitone(std::vector<std::pair<int, double>>& mapping, int program) {
-	if (program < 0) {
+void MidiMessage::makeMts2_KeyTuningsBySemitone(std::vector<std::pair<int, double>>& mapping, int program)
+{
+	if (program < 0)
+   {
 		program = 0;
-	} else if (program > 127) {
+	}
+	else
+   if (program > 127)
+   {
 		program = 127;
 	}
 	std::vector<uchar> data;
@@ -2152,22 +2530,32 @@ void MidiMessage::makeMts2_KeyTuningsBySemitone(std::vector<std::pair<int, doubl
 	data.push_back((uchar)0x02);  // sub-ID#2 (note change)
 	data.push_back((uchar)program);  // tuning program number (0 - 127)
 	std::vector<uchar> vlv = intToVlv((int)mapping.size());
-	for (uchar item : vlv) {
+	for (uchar item : vlv)
+   {
 		data.push_back(item);
 	}
-	for (auto &item : mapping) {
+	for (auto &item : mapping)
+   {
 		int keynum = item.first;
-		if (keynum < 0) {
+		if (keynum < 0)
+      {
 			keynum = 0;
-		} else if (keynum > 127) {
+		}
+		else
+      if (keynum > 127)
+      {
 			keynum = 127;
 		}
 		data.push_back((uchar)keynum);
 		double semitones = item.second;
 		int sint = (int)semitones;
-		if (sint < 0) {
+		if (sint < 0)
+      {
 			sint = 0;
-		} else if (sint > 127) {
+		}
+		else
+      if (sint > 127)
+      {
 			sint = 127;
 		}
 		data.push_back((uchar)sint);
@@ -2177,8 +2565,8 @@ void MidiMessage::makeMts2_KeyTuningsBySemitone(std::vector<std::pair<int, doubl
 		uchar msb = (value >> 7) & 0x7f;
 		data.push_back(msb);
 		data.push_back(lsb);
-    }
-    this->makeSysExMessage(data);
+   }
+   this->makeSysExMessage(data);
 }
 
 
@@ -2188,12 +2576,15 @@ void MidiMessage::makeMts2_KeyTuningsBySemitone(std::vector<std::pair<int, doubl
 // MidiMessage::makeMts9_TemperamentByCentsDeviationFromET --
 //
 
-void MidiMessage::makeMts9_TemperamentByCentsDeviationFromET (std::vector<double>& mapping, int referencePitchClass, int channelMask) {
-	if (mapping.size() != 12) {
+void MidiMessage::makeMts9_TemperamentByCentsDeviationFromET (std::vector<double>& mapping, int referencePitchClass, int channelMask)
+{
+	if (mapping.size() != 12)
+   {
 		std::cerr << "Error: input mapping must have a size of 12." << std::endl;
 		return;
 	}
-	if (referencePitchClass < 0) {
+	if (referencePitchClass < 0)
+   {
 		std::cerr << "Error: Cannot have a negative reference pitch class" << std::endl;
 		return;
 	}
@@ -2214,14 +2605,17 @@ void MidiMessage::makeMts9_TemperamentByCentsDeviationFromET (std::vector<double
 	data.push_back(MSB);
 	data.push_back(LSB);
 
-	for (int i=0; i<(int)mapping.size(); i++) {
+	for (int i=0; i<(int)mapping.size(); i++)
+   {
 		int ii = (i - referencePitchClass + 48) % 12;
 		double value = mapping.at(ii) / 100.0;
 
-		if (value > 1.0) {
+		if (value > 1.0)
+      {
 			value = 1.0;
 		}
-		if (value < -1.0) {
+		if (value < -1.0)
+      {
 			value = -1.0;
 		}
 
@@ -2241,7 +2635,8 @@ void MidiMessage::makeMts9_TemperamentByCentsDeviationFromET (std::vector<double
 // MidiMessage::makeEqualTemperament --
 //
 
-void MidiMessage::makeTemperamentEqual(int referencePitchClass, int channelMask) {
+void MidiMessage::makeTemperamentEqual(int referencePitchClass, int channelMask)
+{
 	std::vector<double> temperament(12, 0.0);
 	this->makeMts9_TemperamentByCentsDeviationFromET(temperament, referencePitchClass, channelMask);
 }
@@ -2253,15 +2648,19 @@ void MidiMessage::makeTemperamentEqual(int referencePitchClass, int channelMask)
 // MidiMessage::makeTemperamentBad -- Detune by random amounts from equal temperament.
 //
 
-void MidiMessage::makeTemperamentBad(double maxDeviationCents, int referencePitchClass, int channelMask) {
-	if (maxDeviationCents < 0.0) {
+void MidiMessage::makeTemperamentBad(double maxDeviationCents, int referencePitchClass, int channelMask)
+{
+	if (maxDeviationCents < 0.0)
+   {
 		maxDeviationCents = -maxDeviationCents;
 	}
-	if (maxDeviationCents > 100.0) {
+	if (maxDeviationCents > 100.0)
+   {
 		maxDeviationCents = 100.0;
 	}
 	std::vector<double> temperament(12);
-	for (double &item : temperament) {
+	for (double &item : temperament)
+   {
 		item = ((rand() / (double)RAND_MAX) * 2.0 - 1.0) * maxDeviationCents;
 	}
 	this->makeMts9_TemperamentByCentsDeviationFromET(temperament, referencePitchClass, channelMask);
@@ -2274,7 +2673,8 @@ void MidiMessage::makeTemperamentBad(double maxDeviationCents, int referencePitc
 // MidiMessage::makeTemperamentPythagorean -- Default reference pitch is 2 (D)
 //
 
-void MidiMessage::makeTemperamentPythagorean(int referencePitchClass, int channelMask) {
+void MidiMessage::makeTemperamentPythagorean(int referencePitchClass, int channelMask)
+{
 	std::vector<double> temperament(12);
 	double x = 1200.0 * log2(3.0 / 2.0);
 	temperament[1]  = x * -5 + 3500; // -9.775 cents
@@ -2299,7 +2699,8 @@ void MidiMessage::makeTemperamentPythagorean(int referencePitchClass, int channe
 // MidiMessage::makeTemperamentMeantone -- Default type is 1/4-comma meantone.
 //
 
-void MidiMessage::makeTemperamentMeantone(double fraction, int referencePitchClass, int channelMask) {
+void MidiMessage::makeTemperamentMeantone(double fraction, int referencePitchClass, int channelMask)
+{
 	std::vector<double> temperament(12);
 	double x = 1200.0 * log2((3.0/2.0)*pow(81.0/80.0, -fraction));
 	temperament[1]  = x * -5 + 3500; //  17.107 cents (for fraction = 0.25)
@@ -2324,7 +2725,8 @@ void MidiMessage::makeTemperamentMeantone(double fraction, int referencePitchCla
 // MidiMessage::makeTemperamentMeantoneCommaQuarter -- 1/4-comma meantone
 //
 
-void MidiMessage::makeTemperamentMeantoneCommaQuarter(int referencePitchClass, int channelMask) {
+void MidiMessage::makeTemperamentMeantoneCommaQuarter(int referencePitchClass, int channelMask)
+{
 	this->makeTemperamentMeantone(1.0 / 4.0, referencePitchClass, channelMask);
 }
 
@@ -2335,7 +2737,8 @@ void MidiMessage::makeTemperamentMeantoneCommaQuarter(int referencePitchClass, i
 // MidiMessage::makeTemperamentMeantoneCommaThird -- 1/3-comma meantone
 //
 
-void MidiMessage::makeTemperamentMeantoneCommaThird(int referencePitchClass, int channelMask) {
+void MidiMessage::makeTemperamentMeantoneCommaThird(int referencePitchClass, int channelMask)
+{
 	this->makeTemperamentMeantone(1.0 / 3.0, referencePitchClass, channelMask);
 }
 
@@ -2346,7 +2749,8 @@ void MidiMessage::makeTemperamentMeantoneCommaThird(int referencePitchClass, int
 // MidiMessage::makeTemperamentMeantoneCommaHalf -- 1/2-comma meantone
 //
 
-void MidiMessage::makeTemperamentMeantoneCommaHalf(int referencePitchClass, int channelMask) {
+void MidiMessage::makeTemperamentMeantoneCommaHalf(int referencePitchClass, int channelMask)
+{
 	this->makeTemperamentMeantone(1.0 / 2.0, referencePitchClass, channelMask);
 }
 
@@ -2359,15 +2763,21 @@ void MidiMessage::makeTemperamentMeantoneCommaHalf(int referencePitchClass, int 
 //    and system exclusives which could be dealt with later).
 //
 
-std::ostream& operator<<(std::ostream& out, MidiMessage& message) {
-	for (int i=0; i<(int)message.size(); i++) {
-		if (message[i] >= 0x80) {
+std::ostream& operator<<(std::ostream& out, MidiMessage& message)
+{
+	for (int i=0; i<(int)message.size(); i++)
+   {
+		if (message[i] >= 0x80)
+      {
 			out << "0x" << std::hex << std::setw(2) << std::setfill('0') << (int)message[i];
 			out << std::dec << std::setw(0) << std::setfill(' ');
-		} else {
+		}
+		else
+		{
 			out << (int)message[i];
 		}
-		if (i<(int)message.size() - 1) {
+		if (i<(int)message.size() - 1)
+      {
 			out << ' ';
 		}
 	}
