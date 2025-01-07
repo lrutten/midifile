@@ -28,6 +28,50 @@ public:
       return ev;
    }
 
+   bool isNoteOn()
+   {
+      return ev->isNoteOn();
+   }
+
+   int getChannel()
+   {
+      return ev->getChannel();
+   }
+
+   std::string getTypeEv()
+   {
+      if (ev->isNoteOn())
+      {
+         return "on";
+      }
+      else
+      if (ev->isNoteOff())
+      {
+         return "off";
+      }
+      else
+      {
+         return "--";
+      }
+   }
+
+   std::string getTypeEvOff()
+   {
+      if (ev_off->isNoteOn())
+      {
+         return "on";
+      }
+      else
+      if (ev_off->isNoteOff())
+      {
+         return "off";
+      }
+      else
+      {
+         return "--";
+      }
+   }
+
 private:
    smf::MidiEvent *ev;
    smf::MidiEvent *ev_off;
@@ -107,20 +151,86 @@ void Notes::show()
       std::string key_s = smf::Binasc::keyToPitchName(note);
       std::cout << "note " << note << " " << key_s <<"\n";
       
+      bool overlap = false;
       Event *last = nullptr;
       for (int i = 0; Event *ev: events)
       {
-         if (i == 0)
+         // show only the note on events
+         // the corresponding note off event is accessable through the link
+         if (ev->isNoteOn())
          {
+            if (i == 0)
+            {
+               last = ev;
+            }
+
+            std::cout << "   " << ev->getTick() << ":" << ev->getTypeEv() << " " << ev->getTickOff()  << ":" << ev->getTypeEvOff()<< "\n";
+            if (i>0 && ev->getTick() > last->getTickOff())
+            {
+               //  *----*
+               //           *----*
+               std::cout << "      " << "space\n";
+               // no overlap, with space between the notes
+            }
+            else
+            if (i>0 && ev->getTick() == last->getTickOff())
+            {
+               // no overlap, no space between the notes
+               //  *----*
+               //       *----*
+               std::cout << "      " << "no space\n";
+            }
+            else
+            {
+               overlap = true;
+               if (ev->getTick() == last->getTick())
+               {
+                  if (ev->getTickOff() == last->getTickOff())
+                  {
+                     //  *----*
+                     //  *----*
+                     std::cout << "      " << "overlap type 4\n";
+                  }
+                  else
+                  {
+                     //  *----*
+                     //  *--------*
+                     std::cout << "      " << "overlap type 2\n";
+                  }
+               }
+               else
+               {
+                  if (ev->getTickOff() == last->getTickOff())
+                  {
+                     //  *-------*
+                     //     *----*
+                     std::cout << "      " << "overlap type 3\n";
+                  }
+                  else
+                  if (ev->getTickOff() > last->getTickOff())
+                  {
+                     //  *----*
+                     //     *----*
+                     std::cout << "      " << "overlap type 1\n";
+                  }
+               }
+               std::cout << "         " <<last->getChannel() << "--" << ev->getChannel() << "\n";
+            }
             last = ev;
+
+            int ti  = ev->getTick();
+            int tio = ev->getTickOff();
+            if (tio < ti)
+            {
+               std::cout << "      " << "error in range\n";
+            }
          }
          
-         std::cout << "   " << ev->getTick() << " " << ev->getTickOff() << "\n";
-         if (i>0 && ev->getTick() < last->getTickOff())
-         {
-            std::cout << "      " << "overlap\n";
-         }
          i++;
+      }
+      if (overlap)
+      {
+         std::cout << "   overlapnote " << note << " " << key_s <<"\n";
       }
    }
 }
